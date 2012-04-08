@@ -151,8 +151,42 @@ and modify your jvm to startup with the correct parameters.  I.e. for tomcat, cr
 	fi
 
 	#This is the name of the static variable created by @RecordGCMemUsage(fieldName = "noOfFiveMBClassRequests")
-	export COUNTER="bbc.forge.domt.hello.web.HelloController:noOfFiveMBClassRequests"
+	export COUNTER="org.greencheek.domt.hello.web.HelloController:noOfFiveMBClassRequests"
 	export ASPECT_AGENT="/Users/dominictootell/Downloads/gc-memusage-agent-0.0.1-relocated-shade.jar"
 
 	export JAVA_OPTS="-Xbootclasspath/a:${gclibdir} -agentlib:gcprof -Dgcprof.period=1 -Dgcprof.nwork=${COUNTER} -javaagent:${ASPECT_AGENT} ${JAVA_OPTS}"
 ```
+
+The above example is working on the fact that you have a Class named <b>org.greencheek.domt.hello.web.HelloController</b>
+and that you annotated a method in that controller with 
+
+```java
+	@RecordGCMemUsage(fieldName = "noOfFiveMBClassRequests")
+```
+
+
+When the class is being loaded, the agent will output to stdout, that is it annotating any found classes:
+
+```
+	Annotation found, Modifying Class :org/greencheek/domt/hello/web/HelloController
+
+	Aspecting: org/greencheek/domt/hello/web/HelloController.ClassFicMB(Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)Lorg/springframework/web/servlet/ModelAndView;nullnull
+	Increments: noOfFiveMBClassRequests
+	Adding static initialiser for: org/greencheek/domt/hello/web/HelloController.noOfFiveMBClassRequests
+
+	Adding: public final static AtomicLong noOfFiveMBClassRequests
+```
+
+When you start hitting the application with requests, the twitter gcprof will output to stdout the amount of ram that
+is being consumed/allocated per subsequent increment of the counter (i.e. the amount of ram that has been incremented
+between counter increments)
+
+```
+	85MB w=17 (0MB/s 5136kB/w)
+	50.00%	6	1
+	90.00%	9	1
+	95.00%	10	2
+	99.00%	10	2
+	99.90%	25	5
+	99.99%	35	7
+``` 
