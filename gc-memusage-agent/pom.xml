@@ -43,14 +43,20 @@
 				<version>1.6</version>
 				<executions>
 					<execution>
-						<id>non-relocated-shade</id>
+						<id>relocated-shade</id>
 						<phase>package</phase>
 						<goals>
 							<goal>shade</goal>
 						</goals>
 						<configuration>
 							<shadedArtifactAttached>true</shadedArtifactAttached>
-							<shadedClassifierName>shade</shadedClassifierName>
+							<shadedClassifierName>relocated-shade</shadedClassifierName>
+							<relocations>
+								<relocation>
+									<pattern>org.objectweb.asm</pattern>
+									<shadedPattern>org.greencheek.org.objectweb.asm</shadedPattern>
+								</relocation>								
+							</relocations>							
 							<transformers>
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
