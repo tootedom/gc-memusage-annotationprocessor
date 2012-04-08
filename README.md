@@ -32,10 +32,16 @@ that does this for you, and introducing another counter is extra code.  Also; yo
 want to perform this profiling operation in development; and not proliferate your code base 
 with dev code; that you don't want in production.
 
-Therefore, this app provides an annotation:
+Therefore, this app provides a simple Method Level annotation as follows:
 
 ```java
-	@RecordGCMemUsage(fieldName = "noOfFiveMBClassRequests")
+	@RecordGCMemUsage(fieldName = "ANY_VALID_JAVA_VARNAME")
+```
+
+For example:
+
+```java
+    @RecordGCMemUsage(fieldName = "noOfFiveMBClassRequests")
 	@RequestMapping(value = "/5mb", method = RequestMethod.GET)
 	public ModelAndView FiveMB(HttpServletRequest request,HttpServletResponse resp)
 	{
@@ -44,9 +50,12 @@ Therefore, this app provides an annotation:
 	}
 ```
 
-and a -javaagent.  The javaagent is a java.lang.instrument.ClassFileTransformer that notices the 
-above annotation, and modifies the bytecode of the class to introduce a AtomicLong and an increment of the
-AtomicLong at the beginning of the method, on which the annotation is present:
+and a -javaagent class is provided that used that @RecordGCMemUsage annotation.  
+The javaagent is a java.lang.instrument.ClassFileTransformer that notices the 
+above annotation, and modifies the bytecode of the class at run time when the load is loaded
+in order to introduce a AtomicLong and an increment of that AtomicLong at the beginning of the
+method, on which the annotation is present.  For Example, in a code sense it would looks something
+like you can the following in your code:
 
 ```java
 	public static final AtomicLong noOfFiveMBClassRequests = new AtomicLong(0)
