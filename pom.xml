@@ -19,6 +19,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<git.snapshots.repo.url>https://github.com/tootedom/tootedom-mvn-repo/raw/master/snapshots</git.snapshots.repo.url>
+		<git.releases.repo.url>https://github.com/tootedom/tootedom-mvn-repo/raw/master/releases</git.releases.repo.url>
 	</properties>
 
 	<build>
@@ -94,11 +96,11 @@
 	<distributionManagement>
 		<repository>
 			<id>repo</id>
-			<url>https://github.com/tootedom/tootedom-mvn-repo/raw/master/releases</url>
+			<url>${git.releases.repo.url}</url>
 		</repository>
 		<snapshotRepository>
 			<id>snapshot-repo</id>
-			<url>https://github.com/tootedom/tootedom-mvn-repo/raw/master/snapshots</url>
+			<url>${git.snapshots.repo.url}</url>
 		</snapshotRepository>
 	</distributionManagement>
 
