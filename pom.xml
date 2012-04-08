@@ -33,7 +33,7 @@
 						the below makes sure that just a "deploy" occurs, and no site is generated -->
 					<goals>deploy</goals>
 				</configuration>
-			</plugin>			
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-scm-plugin</artifactId>
@@ -66,14 +66,8 @@
 					<version>true</version>
 					<author>true</author>
 					<keywords>true</keywords>
-					<additionalJOption>
-						-J-Djavax.net.ssl.trustStore=${javax.net.ssl.trustStore} \
-						-J-Djavax.net.ssl.keyStore=${javax.net.ssl.keyStore} \
-						-J-Djavax.net.ssl.keyStorePassword=${javax.net.ssl.keyStorePassword} \
-						-J-Djavax.net.ssl.keyStoreType=PKCS12
-					</additionalJOption>
 					<links>
-						<link>http://docs.oracle.com/javase/6/docs/api/</link>						
+						<link>http://docs.oracle.com/javase/6/docs/api/</link>
 					</links>
 				</configuration>
 				<executions>
@@ -97,6 +91,16 @@
 		<module>gc-memusage-annotation</module>
 	</modules>
 
+	<distributionManagement>
+		<repository>
+			<id>repo</id>
+			<url>https://github.com/tootedom/tootedom-mvn-repo/raw/master/releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshot-repo</id>
+			<url>https://github.com/tootedom/tootedom-mvn-repo/raw/master/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 
 </project>

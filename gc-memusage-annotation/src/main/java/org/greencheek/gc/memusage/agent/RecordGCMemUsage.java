@@ -8,12 +8,14 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation that is to be used in conjunction with the GC Memory
- * Usage Agent.  The annotation signals to the Agent to generate an
- * AtomicLong static field and insert into the method with the annotation
- * an increment on the atomic long.
+ * Usage Agent (https://github.com/tootedom/jvmgcprof).  
+ * This annotation is used in conjuction with a custom javaagent;
+ * which generates a static AtomicLong, and aspects the methods
+ * on which the annotation is present with an increment of the long.
  * 
- * The long is used as a mechanism on which the gc memory profile can
- * calculate the usage in between invocations (incrementations) of the counter
+ * The long can than be subsequently used as a mechanism on which the gc memory profile
+ * (https://github.com/tootedom/jvmgcprof) can calculate the memory usage in 
+ * in between invocations (incrementations) of the counter.
  * 
  * @author  Dominic Tootell
  * @version %I%, %G%
@@ -27,7 +29,7 @@ public @interface RecordGCMemUsage {
 	 * The name of the generated field that is used to count the number of time
 	 * the method has been called
 	 * 
-	 * @return The field name that will be generated.  If you do not provide a field name
+	 * @return The field name that will be generated.  
 	 */
 	String fieldName();
 }
