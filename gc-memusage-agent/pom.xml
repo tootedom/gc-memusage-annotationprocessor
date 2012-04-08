@@ -2,7 +2,6 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-
 	<artifactId>gc-memusage-agent</artifactId>
 	<packaging>jar</packaging>
 
@@ -36,15 +35,13 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>1.4</version>
+				<version>1.6</version>
 				<executions>
-
 					<execution>
 						<id>non-relocated-shade</id>
 						<phase>package</phase>
@@ -54,8 +51,6 @@
 						<configuration>
 							<shadedArtifactAttached>true</shadedArtifactAttached>
 							<shadedClassifierName>shade</shadedClassifierName>
-
-
 							<transformers>
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
