@@ -87,7 +87,8 @@ The presence of the annotation does not do anything unless the -javaagent is pre
 @RecordGCMemUsage annotation and changes the bytecode of the class to introduce a static java.util.concurrent.AtomicLong 
 and add an increment of the AtomicLong on Entry to the method on which the annotation is present. 
 
-The annotation is found in the following package:
+The annotation is found in the following package.  It is only this dependency that you need to include in your
+application.  The agent is NOT needed by your web application; you just need the annotation:
 
 ```xml
 		<dependency>
@@ -97,7 +98,7 @@ The annotation is found in the following package:
 		</dependency> 
 ```
 
-The javaagent is found in the following package:
+The javaagent is found in the following package.  This is not required by your application code:
 
 ```xml
 		<dependency>
@@ -161,7 +162,7 @@ and modify your jvm to startup with the correct parameters.  I.e. for tomcat, cr
         export DYLD_LIBRARY_PATH="$gclibdir:$DYLD_LIBRARY_PATH"
 	fi
 
-	if [ "x$OS" == "linux" ]; then
+	if [ "x$OS" == "xlinux" ]; then
         export LD_LIBRARY_PATH="$gclibdir:$LD_LIBRARY_PATH"
 	fi
 
