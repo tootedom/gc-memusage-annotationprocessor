@@ -1,13 +1,13 @@
 GC MemUsage Annotation and Agent.
 ---------------------------------
 
-This class (annotation), and associated agent, is to be used in conjunction 
+A method annotation, and associated agent, to be used in conjunction 
 with the twitter gcprof (https://github.com/tootedom/jvmgcprof).
 The gcprof application can tell you the amount of ram that has been allocated 
 between subsequent calls to a method; via watching an incrementing counter.  
-For example, one use case would be to see how much ram is used to service a REST request
-on a servlet.  In order to monitor such a request, you need to change your code to add something
-like the following:
+For example, one use case would be to see how much ram is used to service a 
+single REST request on a servlet.  In order to monitor such a request, 
+you would need to change your code to add something like the following:
 
 ```java
 	public final static AtomicInteger requests = new AtomicInteger(0);
@@ -23,16 +23,20 @@ like the following:
 	}
 ```
 
-You would then run the gcprof application to watch the "requests" static variable.  
+You would then run the gcprof application to watch the "<b>requests</b>" static variable.  
 
-Having the above counter in a request processing method is good; and is a simple 
-monitoring counter that you could use and leave in your application, to monitor the number
-of requests a REST endpoint has received.  However, you might have another library you use
-that does this for you, and introducing another counter is extra code.  Also; you might just 
-want to perform this profiling operation in development; and not proliferate your code base 
-with dev code; that you don't want in production.
+Having the above counter in a request processing method is good; and simple way to provide a
+monitoring counter that you could use and leave in your application as a means to monitor 
+the number of requests a REST endpoint has received.  However, you might have another library 
+that you are use that does this for you, registering the monitoring value with your monitoring 
+system; etc, and introducing another counter is just extra code.  
 
-Therefore, this app provides a simple Method Level annotation as follows:
+You might also just wish to perform this gc profiling operation in development; and not 
+have to proliferate your code base with development code that updates counter increments.
+In other words you don't want the code active in production.  Within a C application this would
+be akin to preprocessor code that is removed at compile time when building for production.
+
+Therefore, this project provides a simple Method Level annotation as follows:
 
 ```java
 	@RecordGCMemUsage(fieldName = "ANY_VALID_JAVA_VARNAME")
@@ -50,12 +54,12 @@ For example:
 	}
 ```
 
-and a -javaagent class is provided that used that @RecordGCMemUsage annotation.  
+and a <b>-javaagent</b> is provided that used that @RecordGCMemUsage annotation.  
 The javaagent is a java.lang.instrument.ClassFileTransformer that notices the 
-above annotation, and modifies the bytecode of the class at run time when the load is loaded
-in order to introduce a AtomicLong and an increment of that AtomicLong at the beginning of the
-method, on which the annotation is present.  For Example, in a code sense it would looks something
-like you can the following in your code:
+above annotation, and modifies the bytecode of the class at run time when the class is loaded.
+The agent introduces aa AtomicLong and an increment of that AtomicLong at the beginning of the
+method, on which the annotation is present.  For Example, in a code sense it would look something
+like, it you had written the code yourself:
 
 ```java
 	public static final AtomicLong noOfFiveMBClassRequests = new AtomicLong(0)
@@ -71,11 +75,13 @@ like you can the following in your code:
  
 Without the javaagent, the client code is just an annotation that has no use other than documents that
 in development you used it to monitor gc use.  In other works it is a Simple java method annotation 
-that can be used in conjunction with the gc-memusage-agent to indicate the you wish to 
+that can be used in conjunction with the <b>gc-memusage-agent</b> to indicate the you wish to 
 monitor the gc usage of every subsequent calls to that method.  The annotation does not modify the java
-class.  Only when the -javagent is used does the class, and method, on which the annotation is declare 
-change at runtime via bytecode weaving.  The name of the static variable created is taken from the 
-fieldName attribute of the annotation.
+class; and therefore has no performance impact on production code.  It is only when the -javagent is 
+used does the class, and method on which the annotation is declared, change at runtime via bytecode weaving;
+to introduce the static increment per method invocation.  
+
+The name of the static variable created is taken from the <b>fieldName</b> attribute of the annotation.
 
 The presence of the annotation does not do anything unless the -javaagent is present.  The java agent looks for the
 @RecordGCMemUsage annotation and changes the bytecode of the class to introduce a static java.util.concurrent.AtomicLong 
